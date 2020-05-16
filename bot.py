@@ -8,8 +8,8 @@ from discord.ext.commands import has_permissions
 config = None # no value set until config.json is read
 all_cogs = None # no value set until all cogs are loaded
 
-with open("private/config.json") as json_file:
-    config = json.load(json_file)
+# with open("private/config.json") as json_file:
+#     config = json.load(json_file)
 
 client = commands.Bot(command_prefix = "!")
 
