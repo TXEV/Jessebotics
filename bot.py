@@ -28,4 +28,4 @@ async def reload(ctx, extension):
 
     print("Reloaded all commands")
 
-client.run(process.env.token)
+client.run(os.environ["token"])
