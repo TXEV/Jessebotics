@@ -37,4 +37,4 @@ async def reload(ctx):
 
     print("Reloaded all commands")
 
-client.run(config["token"])
+client.run(process.env.token)
