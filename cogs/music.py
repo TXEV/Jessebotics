@@ -1,14 +1,20 @@
 """
 Please understand Music bots are complex, and that even this basic example can be daunting to a beginner.
+
 For this reason it's highly advised you familiarize yourself with discord.py, python and asyncio, BEFORE
 you attempt to write a music bot.
+
 This example makes use of: Python 3.6
+
 For a more basic voice example please read:
     https://github.com/Rapptz/discord.py/blob/rewrite/examples/basic_voice.py
+
 This is a very basic playlist example, which allows per guild playback of unique queues.
 The commands implement very basic logic for basic usage. But allow for expansion. It would be advisable to implement
 your own permissions and usage logic for commands.
+
 e.g You might like to implement a vote before skipping the song or only allow admins to stop the player.
+
 Music bots require lots of work, and tuning. Goodluck.
 If you find any bugs feel free to ping me on discord. @Eviee#0666
 """
@@ -68,6 +74,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
     def __getitem__(self, item: str):
         """Allows us to access attributes similar to a dict.
+
         This is only useful when you are NOT downloading.
         """
         return self.__getattribute__(item)
@@ -95,6 +102,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
     @classmethod
     async def regather_stream(cls, data, *, loop):
         """Used for preparing a stream, instead of downloading.
+
         Since Youtube Streaming links expire."""
         loop = loop or asyncio.get_event_loop()
         requester = data['requester']
@@ -107,8 +115,10 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
 class MusicPlayer:
     """A class which is assigned to each guild using the bot for Music.
+
     This class implements a queue and loop, which allows for different guilds to listen to different playlists
     simultaneously.
+
     When the bot disconnects from the Voice it's instance will be destroyed.
     """
 
@@ -229,11 +239,13 @@ class Music(commands.Cog):
     @commands.command(name='connect', aliases=['join'])
     async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
         """Connect to voice.
+
         Parameters
         ------------
         channel: discord.VoiceChannel [Optional]
             The channel to connect to. If a channel is not specified, an attempt to join the voice channel you are in
             will be made.
+
         This command also handles moving the bot to different channels.
         """
         if not channel:
@@ -262,8 +274,10 @@ class Music(commands.Cog):
     @commands.command(name='play', aliases=['sing'])
     async def play_(self, ctx, *, search: str):
         """Request a song and add it to the queue.
+
         This command attempts to join a valid voice channel if the bot is not already in one.
         Uses YTDL to automatically search and retrieve a song.
+
         Parameters
         ------------
         search: str [Required]
@@ -285,7 +299,7 @@ class Music(commands.Cog):
                 source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=True)
         except:
             source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
-        
+
         await player.queue.put(source)
 
     @commands.command(name='pause')
@@ -374,6 +388,7 @@ class Music(commands.Cog):
     @commands.command(name='volume', aliases=['vol'])
     async def change_volume(self, ctx, *, vol: float):
         """Change the player volume.
+
         Parameters
         ------------
         volume: float or int [Required]
@@ -398,6 +413,7 @@ class Music(commands.Cog):
     @commands.command(name='stop')
     async def stop_(self, ctx):
         """Stop the currently playing song and destroy the player.
+
         !Warning!
             This will destroy the player assigned to your guild, also deleting any queued songs and settings.
         """
