@@ -65,7 +65,7 @@ class General(commands.Cog):
 
     #!weather: retrieve current weather data
     @commands.command()
-    async def weather(self, ctx, area="Surrey, CA", unit="celsius"):
+    async def weather(self, ctx, area="Surrey,CA", unit="celsius"):
         """Retrieves current weather
          Parameters
         ------------
@@ -76,10 +76,6 @@ class General(commands.Cog):
         if not(unit == "celsius") and not(unit == "c") and not(unit == "fahrenheit") and not(unit == "f") and not(unit == "kelvin") and not(unit == "k"):
             await ctx.send(f"cannot display temperature as {unit}")
             return
-
-        r = None
-        success = None
-        data = None
 
         def format_weather_message(f_area, f_temp, f_unit, f_weather):
             return f"Current Weather Forecast:\n{f_area}: {f_temp}{f_unit}\n{f_weather}"
@@ -96,7 +92,7 @@ class General(commands.Cog):
             temp_c = int(round(temp_k - 273.15))
             temp_f = int(round(temp_k * 9 / 5 - 459.67))
             current_weather = data["weather"][0]["main"]
-            current_area = data["name"] + " " + data["sys"]["country"]
+            current_area = data["name"] + ", " + data["sys"]["country"]
 
             if unit == "celsius" or unit == "c":
                 await ctx.send(format_weather_message(current_area, str(temp_c), "ºC", current_weather))
