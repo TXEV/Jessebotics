@@ -13,7 +13,7 @@ class General(commands.Cog):
         
         self.manifest = None
 
-        with open("../manifest.json") as json_file:
+        with open("./../manifest.json") as json_file:
             self.manifest = json.load(json_file)
 
     #!8ball <question>: answers your questions
