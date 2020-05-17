@@ -137,10 +137,11 @@ class MusicPlayer:
             self.next.clear()
 
             try:
-                async with timeout(2):
-                    source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=True)
-            except:
-                source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
+                # Wait for the next song. If we timeout cancel the player and disconnect...
+                async with timeout(300):  # 5 minutes...
+                    source = await self.queue.get()
+            except asyncio.TimeoutError:
+                return self.destroy(self._guild)
 
             if not isinstance(source, YTDLSource):
                 # Source was probably a stream (not downloaded)
@@ -279,8 +280,12 @@ class Music(commands.Cog):
 
         # If download is False, source will be a dict which will be used later to regather the stream.
         # If download is True, source will be a discord.FFmpegPCMAudio with a VolumeTransformer.
-        source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
-
+        try:
+            async with timeout(2):
+                source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=True)
+        except:
+            source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
+        
         await player.queue.put(source)
 
     @commands.command(name='pause')
