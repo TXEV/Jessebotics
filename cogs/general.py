@@ -89,11 +89,11 @@ class General(commands.Cog):
             current_area = data["name"] + " " + data["sys"]["country"]
 
             if unit == "celsius" or unit == "c":
-                await ctx.send(format_weather_message(current_area, temp_c, "ºC", current_weather))
+                await ctx.send(format_weather_message(current_area, str(temp_c), "ºC", current_weather))
             elif unit == "fahrenheit" or unit == "f":
-                await ctx.send(format_weather_message(current_area, temp_f, "ºF", current_weather))
+                await ctx.send(format_weather_message(current_area, str(temp_f), "ºF", current_weather))
             else:
-                await ctx.send(format_weather_message(current_area, temp_k, "ºK", current_weather))
+                await ctx.send(format_weather_message(current_area, str(temp_k), "ºK", current_weather))
 
 def setup(client):
     client.add_cog(General(client))
