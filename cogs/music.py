@@ -50,6 +50,7 @@ ffmpegopts = {
 }
 
 ytdl = YoutubeDL(ytdlopts)
+ytdl.cache.remove()
 
 
 class VoiceConnectionError(commands.CommandError):
@@ -364,7 +365,7 @@ class Music(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command(name='now_playing', aliases=['np', 'current', 'currentsong', 'playing'])
+    @commands.command(name='now_playing', aliases=['np', 'now', 'nowplaying', 'current', 'currentsong', 'playing'])
     async def now_playing_(self, ctx):
         """Display information about the currently playing song."""
         vc = ctx.voice_client

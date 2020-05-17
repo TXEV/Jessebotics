@@ -5,7 +5,7 @@ import os
 from discord.ext import commands
 
 client = commands.Bot(command_prefix = "!")
-app_version = "2020.05.16.1"
+app_version = "2020.05.17.0"
 
 for filename in os.listdir('./cogs'):
     if filename.endswith(".py"):
@@ -21,16 +21,10 @@ async def on_ready():
 #
 # Commands
 #
-@client.command()
-async def reload(ctx, extension):
-    """Reloads a section of the commands and updates bot."""
-    client.unload_extension(f"cogs.{extension}")
-    client.load_extension(f"cogs.{extension}")
-
-    print("Reloaded all commands")
 
 @client.command()
 async def version(ctx):
+    '''displays the bot's version'''
     await ctx.send(app_version)
 
 client.run(os.environ["token"])

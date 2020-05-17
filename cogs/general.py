@@ -1,5 +1,8 @@
 import discord
+import requests
 import random
+import os
+import json
 
 from discord.ext import commands
 from discord.ext.commands import has_permissions
@@ -43,30 +46,54 @@ class General(commands.Cog):
             ]
             await ctx.send(f"Question: {question}\nAnswer: {random.choice(responses)}")
 
-    #!clear <amount>: deletes a specified amount of messages in a text channel
-    @commands.command()
-    @has_permissions(manage_messages=True)
-    async def clear(self, ctx, amount=5):
-        """Clears chat messages
-        Parameters
-        ------------
-        amount [optional]: Your question that needs an answer. Removes last 5 chat messages by default
-        """
-        amount += 1
-        await ctx.channel.purge(limit = amount)
-        await ctx.send(f"deleted {amount} messages")
-
-    @clear.error
-    async def clear_error(self, error, ctx):
-        if isinstance(error, PermissionError):
-            await ctx.send("You don't have permission to do that!")
-
     #!ping: returns bot latency
     @commands.command()
     async def ping(self, ctx):
         """Returns the bot's latency
         """
         await ctx.send(f"Pong! {round(self.client.latency * 1000)}ms")
+
+    #!weather: retrieve current weather data
+    @commands.command()
+    async def weather(self, ctx, area="Surrey, CA", unit="celsius"):
+        """Retrieves current weather
+         Parameters
+        ------------
+        area [optional]: The city (default to Surrey, CA)
+        unit [optional]: The unit to display the temperature in (default to celsius)
+        """
+
+        if not(unit == "celsius") and not(unit == "c") and not(unit == "fahrenheit") and not(unit == "f") and not(unit == "kelvin") and not(unit == "k"):
+            await ctx.send(f"cannot display temperature as {unit}")
+            return
+
+        r = None
+        success = None
+        data = None
+
+        def format_weather_message(f_area, f_temp, f_unit, f_weather):
+            return f"Current Weather Forecast:\n{f_area}: {f_temp}{f_unit}\n{f_weather}"
+
+        try:
+            r = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={area}&appid=" + os.environ["openweathermapkey"])
+            success = True
+            data = json.loads(r.text)
+        except:
+            await ctx.send("Failed to retrieve weather data")
+        
+        if success == True:
+            temp_k = int(round(data["main"]["temp"]))
+            temp_c = int(round(temp_k - 273.15))
+            temp_f = int(round(temp_k * 9 / 5 - 459.67))
+            current_weather = data["weather"]["0"]["main"]
+            current_area = data["name"] + " " + data["sys"]["country"]
+
+            if unit == "celsius" or unit == "c":
+                await ctx.send(format_weather_message(current_area, temp_c, "ºC", current_weather))
+            elif unit == "fahrenheit" or unit == "f":
+                await ctx.send(format_weather_message(current_area, temp_f, "ºF", current_weather))
+            else:
+                await ctx.send(format_weather_message(current_area, temp_k, "ºK", current_weather))
 
 def setup(client):
     client.add_cog(General(client))
