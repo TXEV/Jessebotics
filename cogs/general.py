@@ -10,6 +10,11 @@ from discord.ext.commands import has_permissions
 class General(commands.Cog):
     def __init__(self, client):
         self.client = client
+        
+        self.manifest = None
+
+        with open("../manifest.json") as json_file:
+            self.manifest = json.load(json_file)
 
     #!8ball <question>: answers your questions
     @commands.command(name="8ball")
@@ -53,6 +58,11 @@ class General(commands.Cog):
         """
         await ctx.send(f"Pong! {round(self.client.latency * 1000)}ms")
 
+    @commands.command()
+    async def version(self, ctx):
+        '''displays the bot's version'''
+        await ctx.send(self.manifest["version"])
+
     #!weather: retrieve current weather data
     @commands.command()
     async def weather(self, ctx, area="Surrey, CA", unit="celsius"):
@@ -77,7 +87,7 @@ class General(commands.Cog):
         try:
             r = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={area}&appid=" + os.environ["openweathermapkey"])
             success = True
-            data = json.loads(r.text)
+            data = json.load(r.text)
         except:
             await ctx.send("Failed to retrieve weather data")
         
@@ -85,7 +95,7 @@ class General(commands.Cog):
             temp_k = int(round(data["main"]["temp"]))
             temp_c = int(round(temp_k - 273.15))
             temp_f = int(round(temp_k * 9 / 5 - 459.67))
-            current_weather = data["weather"]["0"]["main"]
+            current_weather = data["weather"][0]["main"]
             current_area = data["name"] + " " + data["sys"]["country"]
 
             if unit == "celsius" or unit == "c":
