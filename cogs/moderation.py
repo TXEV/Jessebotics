@@ -11,11 +11,11 @@ class Moderation(commands.Cog):
     #!clear <amount>: deletes a specified amount of messages in a text channel
     @commands.command()
     @has_permissions(manage_messages=True)
-    async def clear(self, ctx, amount=5):
+    async def clear(self, ctx, amount=1):
         """Clears chat messages
         Parameters
         ------------
-        amount [optional]: Your question that needs an answer. Removes last 5 chat messages by default
+        amount [optional]: Your question that needs an answer. Removes last 1 chat message by default
         """
         amount += 1
         await ctx.channel.purge(limit = amount)
