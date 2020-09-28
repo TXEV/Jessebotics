@@ -1,2 +1,0 @@
-# Jessebotics
-a discord bot

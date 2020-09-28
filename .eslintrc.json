@@ -1,0 +1,41 @@
+{
+    "env": {
+        "commonjs": true,
+        "es6": true,
+        "node": true
+    },
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaVersion": 2018
+    },
+    "rules": {
+        "semi": "error",
+        "no-extra-semi": "warn",
+        "curly": [ 
+            "error", "multi" 
+        ],
+        "comma-dangle": [ 
+            "error", "never" 
+        ],
+        "indent": [
+            "error", 4
+        ],
+        "max-len": [
+            "error", 
+            {
+                "code": 80
+            } 
+        ],
+        "quotes": [
+            "error", 
+            "double", 
+            { 
+                "allowTemplateLiterals": true, 
+                "avoidEscape": true 
+            }
+        ]
+    }
+}
