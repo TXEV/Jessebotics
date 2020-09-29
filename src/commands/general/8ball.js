@@ -6,7 +6,7 @@ module.exports = class EightBallCommand extends Command {
             name: "8ball",
             group: "general",
             memberName: "8ball",
-            description: "Replies with a meow, kitty cat."
+            description: "Tells the future."
         });
 
         this.responses = [
